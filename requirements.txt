@@ -1,0 +1,9 @@
+tqdm
+wheel
+jaconv
+rdflib
+mysql-connector-python
+pandas
+networkx
+matplotlib
+openpyxl

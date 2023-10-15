@@ -1,2 +1,5 @@
 .venv
 config.ini
+src/check_mysql_server.ipynb
+src/check_rakuten_recipe.ipynb
+src/check_seibunhyo.ipynb

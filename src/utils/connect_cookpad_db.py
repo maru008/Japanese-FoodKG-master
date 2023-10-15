@@ -1,5 +1,6 @@
 import mysql.connector
 import configparser
+import pandas as pd
 
 def get_config(filename):
     """
@@ -15,29 +16,29 @@ def get_config(filename):
     config.read(filename)
     return config
 
+
 def execute_sql(config, sql):
-    """
-    与えられた設定とSQL文を用いて、データベースに接続し、SQL文を実行します。
-    結果をフェッチし、全ての行を返します。
-
-    Parameters:
-    config (configparser.ConfigParser): データベース接続設定を含むconfigparser.ConfigParserオブジェクト
-    sql (str): 実行するSQL文
-
-    Returns:
-    list: SQL文の実行結果を含むリスト
-    """
     db = mysql.connector.connect(
         host="localhost",
-        user=config['DataBase']['DB_USER'],
-        password=config['DataBase']['DB_PASS'],
-        database=config['DataBase']['DB_NAME'],
+        user=config['Database']['DB_USER'],
+        password=config['Database']['DB_PASS'],
+        database=config['Database']['DB_NAME'],
         port=int(config['Data']['cookpad_db_port'])
     )
-
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
     cursor.execute(sql)
+    results = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return results
 
-    result = cursor.fetchall()
-
-    return result
+def execute_sql2df(config, sql):
+    db = mysql.connector.connect(
+        host="localhost",
+        user=config['Database']['DB_USER'],
+        password=config['Database']['DB_PASS'],
+        database=config['Database']['DB_NAME'],
+        port=int(config['Data']['cookpad_db_port'])
+    )
+    df = pd.read_sql(sql, db)
+    return df
