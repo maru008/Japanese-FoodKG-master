@@ -5,6 +5,7 @@ from tqdm import tqdm
 import uuid
 from rdflib import Graph, Namespace, URIRef, BNode, Literal, RDF, RDFS
 from rdflib.namespace import XSD
+from urllib.parse import quote
 
 config = configparser.ConfigParser()
 config.read("../config.ini")
@@ -40,6 +41,8 @@ NUTRITION = Namespace("http://JapaneseFoodKG.org/Nutrition/")
 DATA_SOURCE = Namespace("http://JapaneseFoodKG.org/data_source/")
 RELATION = Namespace("http://JapaneseFoodKG.org/relation/")
 
+import re
+
 
 ingredient_uris = {}
 for index, row in tqdm(cookpad_edges.iterrows(),total=len(cookpad_edges),desc="Cookpad"):
@@ -47,20 +50,25 @@ for index, row in tqdm(cookpad_edges.iterrows(),total=len(cookpad_edges),desc="C
     recipe_title = row['recipe_title']
     ingredient_name = row['ingredient_name']
     data_source = row['data_source']
+
+    if pd.isna(recipe_id) or pd.isna(ingredient_name):
+        continue
     
+    recipe_id_encoded = quote(recipe_id, safe='')  # 全ての文字をエンコード
+    ingredient_name_encoded = quote(ingredient_name, safe='')  # 全ての文字をエンコード
     
     # レシピに関する情報を追加
-    recipe_uri = RECIPE[recipe_id]
+    recipe_uri = RECIPE[recipe_id_encoded]
     g.add((recipe_uri, RDF.type, RECIPE.Recipe))
     g.add((recipe_uri, RECIPE.title, Literal(recipe_title)))
     g.add((recipe_uri, DATA_SOURCE.source, Literal(data_source)))  # データソースをレシピに追加
     
     
     # 食材のURI（文字列が一致する場合は既存のURIを使用）
-    if ingredient_name not in ingredient_uris:
+    if ingredient_name_encoded not in ingredient_uris:
         random_uuid = str(uuid.uuid4())
-        ingredient_uris[ingredient_name] = INGREDIENT[random_uuid]
-    ingredient_uri = ingredient_uris[ingredient_name]
+        ingredient_uris[ingredient_name_encoded] = INGREDIENT[random_uuid]
+    ingredient_uri = ingredient_uris[ingredient_name_encoded]
 
     # 食材に関する情報を追加
     g.add((ingredient_uri, RDF.type, INGREDIENT.Ingredient))
@@ -68,7 +76,7 @@ for index, row in tqdm(cookpad_edges.iterrows(),total=len(cookpad_edges),desc="C
 
     # レシピと食材の関係を追加
     g.add((recipe_uri, RECIPE.hasIngredient, ingredient_uri))
-    
+
 
 for index, row in tqdm(rakuten_edges.iterrows(),total=len(rakuten_edges),desc="Rakten"):
     recipe_id = row['recipe_id']
@@ -96,10 +104,6 @@ for index, row in tqdm(rakuten_edges.iterrows(),total=len(rakuten_edges),desc="R
     # レシピと食材の関係を追加
     g.add((recipe_uri, RECIPE.hasIngredient, ingredient_uri))
     
-    
-
-
-
 nutrition_uris = {}
 
 for index, row in tqdm(seibunhyo_edges.iterrows(),total=len(seibunhyo_edges),desc="Seibunhyo"):
