@@ -30,7 +30,7 @@ print("データ数")
 print("クックパッド: ",len(cookpad_edges))
 print("楽天レシピ: ",len(rakuten_edges))
 print("成分表:",len(seibunhyo_edges))
-
+print("====================")
 
 print("知識グラフ作成")
 g = Graph()
@@ -134,14 +134,15 @@ for index, row in tqdm(seibunhyo_edges.iterrows(),total=len(seibunhyo_edges),des
         g.add((relation_uri, RELATION.value, Literal(value, datatype=XSD.float)))
         g.add((relation_uri, DATA_SOURCE.source, Literal(data_source))) 
 
-
-japanesefoodkg_ttl_path = os.path.join(OUTPUT_ROOT, "JapaneseFoodKG.ttl") 
+result_kg_turtle = g.serialize(format="turtle")
+japanesefoodkg_ttl_path = os.path.join(OUTPUT_ROOT, f"JapaneseFoodKG.ttl") 
 with open(japanesefoodkg_ttl_path, "wb") as f:
     print(f"saving to {japanesefoodkg_ttl_path}")
-    f.write(g.serialize(format="turtle"))
+    f.write(result_kg_turtle.encode("utf-8"))
 
+result_kg_xml = g.serialize(format="xml")
 # .rdfファイルとして保存
-japanesefoodkg_rdf_path = os.path.join(OUTPUT_ROOT, "JapaneseFoodKG.rdf") 
+japanesefoodkg_rdf_path = os.path.join(OUTPUT_ROOT, f"JapaneseFoodKG.rdf") 
 with open(japanesefoodkg_rdf_path, "wb") as f:
     print(f"saving to {japanesefoodkg_rdf_path}")
-    f.write(g.serialize(format="xml"))
+    f.write(result_kg_xml.encode("utf-8"))
