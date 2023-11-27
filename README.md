@@ -191,7 +191,7 @@ python create_kg.py
 
 ### 備考
 - 本リポジトリは[LODチャレンジ2023](https://2023.lodc.jp/)に合わせて作成されたリポジトリです．
-- 問い合わせ等は yoshimaru[at]mail.doshisha.ac.jp まで
+- 問い合わせ等は yoshimaru[at]mil.doshisha.ac.jp まで
 
 ---
 ### バージョン履歴
