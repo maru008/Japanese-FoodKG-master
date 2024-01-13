@@ -57,10 +57,6 @@ LLMはトレーニングされたデータに基づいて予測を行うため�
       <td style="text-align: center;">Cookpad，楽天レシピ</td>
     </tr>
     <tr>
-      <td style="text-align: center;">食材 -- 食材</td>
-      <td style="text-align: center;">日本食品標準成分表</td>
-    </tr>
-    <tr>
       <td style="text-align: center;">食材 ---栄養素</td>
       <td style="text-align: center;">日本食品標準成分表</td>
     </tr>
