@@ -188,6 +188,7 @@ python create_kg.py
 ### 備考
 - 本リポジトリは[LODチャレンジ2023](https://2023.lodc.jp/)に合わせて作成されたリポジトリです．
 - 問い合わせ等は yoshimaru[at]mil.doshisha.ac.jp まで
+- LODチャレンジ2023 [オープンサイエンス賞 受賞](https://2023.lodc.jp/awardPressRelease2023.html)
 
 ---
 ### バージョン履歴
